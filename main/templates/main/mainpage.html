@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="page-container">
+        <img src="{% static 'images/너굴쓰.png'%}" alt="너굴쓰" width="100px">
+        <p class="tag">LikeLion_14th_session</p>
+        <h1 class="title">2026 멋쟁이사자처럼 {{generation}}기</h1>
+        <h6 class="welcome">Welcome Django!</h6>
+
+        <div class="section">
+            <div class="section-title">🦁 배운 내용 정리🦁</div>
+            <ul>
+                {% for review in reviews %}
+                <li>{{ review }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
