@@ -1,0 +1,78 @@
+/* ===== 글 작성 폼 ===== */
+
+.form-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+form {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 10px rgba(0,0,0,0.15);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #111;
+}
+
+input,
+textarea {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border 0.2s ease;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* 포커스 시 기존 브랜드 컬러 */
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #FB6327;
+}
+
+/* 버튼 */
+button {
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 6px;
+  border: none;
+  background: #FB6327;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background: #e4571f;
+}
+
+button:active {
+  transform: scale(0.98);
+}
