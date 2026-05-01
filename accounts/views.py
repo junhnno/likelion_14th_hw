@@ -1,0 +1,70 @@
+from django.shortcuts import render
+from django.contrib import auth
+from django.shortcuts import redirect, render
+from django.contrib.auth.models import User
+from .models import Profile
+from PIL import Image
+
+
+# Create your views here.
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = auth.authenticate(request, username=username, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            return redirect('main:postpage')
+        else:
+            return render(request, 'accounts/login.html')
+    
+    elif request.method == 'GET':
+        return render(request,'accounts/login.html')
+
+def logout(request):
+    auth.logout(request)
+    return redirect('main:postpage')
+
+def signup(request):
+    if request.method == 'POST':
+        if request.POST['password'] == request.POST['confirm']:
+
+            # 아이디 중복 체크
+            if User.objects.filter(username=request.POST['username']).exists():
+                return render(request, 'accounts/signup.html', {
+                    'error': '이미 존재하는 아이디입니다.',
+                    'username': request.POST['username'],
+                    'nickname': request.POST['nickname'],
+                    'major': request.POST['major'],
+                })
+
+            newuser = User.objects.create_user(
+                username=request.POST['username'],
+                password=request.POST['password'],
+            )
+
+            nickname = request.POST['nickname']
+            major = request.POST['major']
+            profile_image = request.FILES.get('profile_image')
+
+            profile = Profile(
+                user=newuser,
+                nickname=nickname,
+                major=major,
+                max_ramen=request.POST.get('max_ramen', 0),
+                profile_image=profile_image,
+            )
+            profile.save()
+            from PIL import Image
+
+            # 저장 후 리사이징
+            img = Image.open(profile.profile_image.path)
+            img.thumbnail((300, 300))  # 300x300 이하로 리사이즈
+            img.save(profile.profile_image.path)
+
+            auth.login(request, newuser)
+            return redirect('main:postpage')
+
+    return render(request, 'accounts/signup.html')

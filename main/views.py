@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
+from datetime import date
 
 def mainpage(request):
     context = {
@@ -19,7 +20,9 @@ def secondpage(request):
     return render(request, 'main/secondpage.html')
 
 def new_post(request):
-    return render(request, 'main/new_post.html')
+    if not request.user.is_authenticated:
+        return redirect('account:login')
+    return render(request, 'main/new_post.html', {'today': date.today().strftime('%Y-%m-%d')})
 
 def postpage(request):
     posts = Post.objects.all()
@@ -30,18 +33,28 @@ def detail(request, post_id):
     return render(request, 'main/detail.html', {'post': detail_post})
 
 def edit(request, post_id):
+    if not request.user.is_authenticated:
+        return redirect('account:login')
+    
     edit_post = get_object_or_404(Post, pk=post_id)
+
+    if edit_post.writer != request.user.username:
+        return redirect('main:detail', edit_post.id)
+    
     return render(request, 'main/edit.html', {'post': edit_post})
 
 def create(request):
+    if not request.user.is_authenticated:
+        return redirect('account:login')
+    
     new_post = Post()
     new_post.title = request.POST['title']
-    new_post.writer = request.POST['writer']
+    new_post.writer = request.user.username
     new_post.pub_date = request.POST['pub_date']
     new_post.content = request.POST['content']
-    new_post.grade = request.POST['grade']
     new_post.save()
-    return redirect('main:postpage')
+
+    return redirect('main:detail', new_post.id)
 
 def update(request, post_id):
     update_post = get_object_or_404(Post, pk=post_id)
@@ -49,11 +62,19 @@ def update(request, post_id):
     update_post.writer = request.POST['writer']
     update_post.pub_date = request.POST['pub_date']
     update_post.content = request.POST['content']
-    update_post.grade = request.POST['grade']
     update_post.save()
-    return redirect('main:postpage')
+
+    return redirect('main:detail', update_post.id)
 
 def delete(request, post_id):
+    if not request.user.is_authenticated:
+        return redirect('account:login')
+    
     delete_post = get_object_or_404(Post, pk=post_id)
+    
+    if delete_post.writer != request.user.username:
+        return redirect('main:detail', delete_post.id)
+
     delete_post.delete()
+
     return redirect('main:postpage')

@@ -33,14 +33,18 @@
     </select>
 </div>
 
+        <!-- input을 hidden으로 바꾸고 로그인한 유저명 자동 입력 -->
+        <input type="hidden" name="writer" value="{{ request.user.username }}">
+
+        <!-- 화면에는 읽기 전용으로 보여줌 -->
         <div class="form-group">
-            <label for="writer">작성자</label>
-            <input type="text" id="writer" name="writer" required>
+            <label>작성자</label>
+            <input type="text" value="{{ request.user.username }}" disabled>
         </div>
 
         <div class="form-group">
             <label for="pub_date">작성일</label>
-            <input type="date" id="pub_date" name="pub_date" required>
+            <input type="date" name="pub_date" value="{{ today }}" required>
         </div>
 
         <button type="submit">게시글 생성</button>
