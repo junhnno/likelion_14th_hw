@@ -57,12 +57,6 @@ def signup(request):
                 profile_image=profile_image,
             )
             profile.save()
-            from PIL import Image
-
-            # 저장 후 리사이징
-            img = Image.open(profile.profile_image.path)
-            img.thumbnail((300, 300))  # 300x300 이하로 리사이즈
-            img.save(profile.profile_image.path)
 
             auth.login(request, newuser)
             return redirect('main:postpage')
