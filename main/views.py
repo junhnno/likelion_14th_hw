@@ -57,11 +57,19 @@ def create(request):
     return redirect('main:detail', new_post.id)
 
 def update(request, post_id):
+    if not request.user.is_authenticated:
+        return redirect('accounts:login')
+
     update_post = get_object_or_404(Post, pk=post_id)
+
+    if update_post.writer != request.user.username:
+        return redirect('main:detail', update_post.id)
+    
     update_post.title = request.POST['title']
+    update_post.writer = request.user.username
     update_post.writer = request.POST['writer']
     update_post.pub_date = request.POST['pub_date']
-    update_post.content = request.POST['content']
+    update_post.content =request.POST['content']
     update_post.save()
 
     return redirect('main:detail', update_post.id)
