@@ -21,7 +21,7 @@ def secondpage(request):
 
 def new_post(request):
     if not request.user.is_authenticated:
-        return redirect('account:login')
+        return redirect('accounts:login')
     return render(request, 'main/new_post.html', {'today': date.today().strftime('%Y-%m-%d')})
 
 def postpage(request):
@@ -34,7 +34,7 @@ def detail(request, post_id):
 
 def edit(request, post_id):
     if not request.user.is_authenticated:
-        return redirect('account:login')
+        return redirect('accounts:login')
     
     edit_post = get_object_or_404(Post, pk=post_id)
 
@@ -45,13 +45,14 @@ def edit(request, post_id):
 
 def create(request):
     if not request.user.is_authenticated:
-        return redirect('account:login')
+        return redirect('accounts:login')
     
     new_post = Post()
     new_post.title = request.POST['title']
     new_post.writer = request.user.username
     new_post.pub_date = request.POST['pub_date']
     new_post.content = request.POST['content']
+    new_post.grade = request.POST['grade']
     new_post.save()
 
     return redirect('main:detail', new_post.id)
@@ -67,16 +68,16 @@ def update(request, post_id):
     
     update_post.title = request.POST['title']
     update_post.writer = request.user.username
-    update_post.writer = request.POST['writer']
     update_post.pub_date = request.POST['pub_date']
     update_post.content =request.POST['content']
+    update_post.grade = request.POST['grade']
     update_post.save()
 
     return redirect('main:detail', update_post.id)
 
 def delete(request, post_id):
     if not request.user.is_authenticated:
-        return redirect('account:login')
+        return redirect('accounts:login')
     
     delete_post = get_object_or_404(Post, pk=post_id)
     
