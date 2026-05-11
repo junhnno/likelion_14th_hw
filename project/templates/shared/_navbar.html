@@ -9,21 +9,20 @@
     <a class="navbar-link" href="{% url 'main:new_post' %}">새로운 post추가</a>
     {% endif %}
 
-</nav>{% load static %}
+    <a class="navbar-link" href="{% url 'main:tag_list' %}">태그</a>
+</nav>
 
 <header class="header">
     <div class="header-left">
     </div>
     <div class="header-right">
         {% if user.is_authenticated %}
-            {#                로그인 시 보이는 요소 => 로그아웃/마이페이지 버튼#}
             <div>{{ user.username }}님 안녕하세요!</div>
             <div class="auth-links">
                 <a href="{% url 'accounts:logout' %}">로그아웃</a>
                 <a href="{% url 'users:mypage' request.user.id %}">마이페이지</a>
             </div>
         {% else %}
-            {#               로그아웃 시 보이는 요소 => 로그인/회원가입 버튼#}
             <div class="auth-links">
                 <a href="{% url 'accounts:login' %}">로그인</a>
                 <a href="{% url 'accounts:signup' %}">회원가입</a>
@@ -31,5 +30,3 @@
         {% endif %}
     </div>
 </header>
-
-</nav>
